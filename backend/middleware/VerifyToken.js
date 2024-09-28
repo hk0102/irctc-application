@@ -14,7 +14,6 @@ export const verifyToken = (req, res, next) => {
     // decoded contains username and email, not userId
     const { username, email } = decoded;
 
-    console.log("username, email", decoded)
 
     const users = await db.query(`SELECT id FROM users WHERE username = ? AND email = ?`, [
       username, email
