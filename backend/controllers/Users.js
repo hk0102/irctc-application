@@ -28,12 +28,22 @@ export const getUser = async (req, res) => {
 
 export const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
+  var role = "USER"
+  console.log("checkIfUserExistResponse", req.body.role)
+  if(req.body.role=="USER" || req.body.role=="ADMIN" ){
+    role = req.body.role
+  }else{
+    res.status(400).json({ success: false, message:"Invalid role" });
+  }
+  console.log("223rrf")
   const checkIfUserExist = `SELECT * FROM users WHERE username = ?`;
   const checkValues = [username];
   const checkIfUserExistResponse = await db.query(
     checkIfUserExist,
     checkValues
   );
+
+  console.log("checkIfUserExistResponse", checkIfUserExistResponse)
   if (checkIfUserExistResponse[0].length > 0) {
     const message = "UserName already exists";
     res.status(201).json({ success: false, message });
@@ -42,12 +52,12 @@ export const registerUser = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, salt);
     try {
       const registerUserQuery = `
-    INSERT INTO users (username, email, password)
+    INSERT INTO users (username, email, password, role)
     VALUES ?
     `;
 
       const response = await db.query(registerUserQuery, [
-        [[username, email, hashPassword]],
+        [[username, email, hashPassword, role]],
       ]);
 
       res.status(201).json({ success: true });
