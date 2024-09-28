@@ -23,6 +23,18 @@ export const addTrains = async (req, res) => {
   
       // Extract train details from the request body
       const { trainName, trainNumber, totalSeats, sourceStation, destinationStation } = req.body;
+
+      const checkIfTrainExist = await db.query(`SELECT * FROM trains WHERE trainName = ? AND trainNumber = ?`, [
+        trainName,trainNumber,
+      ]);
+
+      console.log("checkIfTrainExist", checkIfTrainExist)
+
+      if(checkIfTrainExist[0].length>0){
+        return res.status(400).json({message: "Train already exists!"})
+
+      }
+
   
       if (!trainName || !trainNumber || !totalSeats || !sourceStation || !destinationStation) {
         return res.status(400).json({ message: "All fields (trainName, trainNumber, totalSeats, sourceStation, destinationStation) are required" });
