@@ -166,4 +166,48 @@ export const getSeatAvailability = async (req, res) => {
       if (connection) await connection.release();
     }
   };
+
+
+  export const getBookingDetails = async (req, res) => {
+    try {
+      
+      const { userId } = req;
+      
+      const { bookingId } = req.params;
+      
+      if (!bookingId) {
+        return res.status(400).json({ message: "Booking ID is required." });
+      }
+  
+      const query = `
+        SELECT 
+          ujd.id AS booking_id, 
+          t.sourceStation, 
+          t.destinationStation, 
+          ujd.seatNumber, 
+          ujd.bookingDate, 
+          t.trainName, 
+          t.trainNumber
+        FROM 
+          userJourneyDetails ujd
+        JOIN 
+          trains t ON t.id = ujd.trainId
+        WHERE 
+          ujd.id = ? AND ujd.userId = ?;
+      `;
+  
+      const [bookingDetails] = await db.query(query, [bookingId, userId]);
+  
+      
+      if (bookingDetails.length === 0) {
+        return res.status(404).json({ message: "No booking found with the provided ID." });
+      }
+  
+      res.status(200).json(bookingDetails[0]);
+    } catch (err) {
+      console.error("Error fetching booking details:", err);
+      res.status(500).json({ message: "Server error while fetching booking details." });
+    }
+  };
+  
   

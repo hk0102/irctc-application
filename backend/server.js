@@ -9,11 +9,6 @@ import router from "./routes/index.js";
 dotenv.config();
 const app = express();
 
-const __dirname = path.resolve();
-
-const buildPath = path.join(__dirname, "build");
-app.use(express.static(buildPath));
-
 app.use(cors({ credentials: true, origin: true }));
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,8 +18,7 @@ app.use(express.json());
 app.use(router);
 
 app.get("/*", (req, res) => {
-  console.log("----here-----")
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.json({message: "Welcome to the Railway Management System API"});
 });
 
 app.listen(process.env.PORT || 80, () =>

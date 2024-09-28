@@ -25,7 +25,8 @@ CREATE TABLE `userJourneyDetails` (
   `id` int Unique NOT NULL AUTO_INCREMENT,
   `userId` INT NOT NULL,
   `trainId` INT NOT NULL,
-  `seatNumber` INT NOT NULL,    
+  `seatNumber` INT NOT NULL, 
+  `bookingDate` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,   
   PRIMARY KEY (`id`),
   FOREIGN KEY (`trainId`) REFERENCES trains(`id`),
   FOREIGN KEY (`userId`) REFERENCES users(`id`)
