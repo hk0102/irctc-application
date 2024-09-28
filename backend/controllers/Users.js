@@ -29,13 +29,11 @@ export const getUser = async (req, res) => {
 export const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   var role = "USER"
-  console.log("checkIfUserExistResponse", req.body.role)
   if(req.body.role=="USER" || req.body.role=="ADMIN" ){
     role = req.body.role
   }else{
     res.status(400).json({ success: false, message:"Invalid role" });
   }
-  console.log("223rrf")
   const checkIfUserExist = `SELECT * FROM users WHERE username = ?`;
   const checkValues = [username];
   const checkIfUserExistResponse = await db.query(
@@ -43,7 +41,6 @@ export const registerUser = async (req, res) => {
     checkValues
   );
 
-  console.log("checkIfUserExistResponse", checkIfUserExistResponse)
   if (checkIfUserExistResponse[0].length > 0) {
     const message = "UserName already exists";
     res.status(201).json({ success: false, message });
