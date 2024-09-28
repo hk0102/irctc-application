@@ -8,14 +8,12 @@ export const addTrains = async (req, res) => {
     try {
       // Get the current user ID from the request object (assuming it was added by your verifyToken middleware)
       const { userId } = req;
-      console.log("userId", userId);
   
       // Check if the user is an admin
       const users = await db.query(`SELECT * FROM users WHERE id = ? AND role = 'ADMIN'`, [
         userId,
       ]);
 
-      console.log("user", users)
   
       if (users.length === 0) {
         return res.status(401).json({ message: "Unauthorized user" });
@@ -28,7 +26,6 @@ export const addTrains = async (req, res) => {
         trainName,trainNumber,
       ]);
 
-      console.log("checkIfTrainExist", checkIfTrainExist)
 
       if(checkIfTrainExist[0].length>0){
         return res.status(400).json({message: "Train already exists!"})
@@ -81,7 +78,6 @@ export const getSeatAvailability = async (req, res) => {
         return res.status(404).json({ message: "No trains found for the given route." });
       }
 
-      console.log("train", trains)
 
       let response = []
 
@@ -107,8 +103,6 @@ export const getSeatAvailability = async (req, res) => {
   
 
   export const bookSeat = async (req, res) => {
-    console.log("req body", req.body);
-   // console.log(`Request body - ${JSON.stringify(req.body)}`);
     const { username, trainNumber } = req.body;
   
     if (!username || !trainNumber) {
